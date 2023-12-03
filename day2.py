@@ -137,3 +137,29 @@ for i in range(len(input_split)):
         total += i 
 
 print(total)
+
+# PART 2
+
+input_split = input.split("\n")
+total = 0
+for i in range(len(input_split)):
+    inp = input_split[i]
+    if inp == "":
+        continue
+    sets = inp.split(":")[1].split(";")
+    currBlue = 0
+    currRed = 0
+    currGreen = 0
+    for s in sets:
+        reveals = s.split(",")
+        for reveal in reveals:
+            cube_num = (int)(reveal.split(" ")[1])
+            if "red" in reveal:
+                currRed = max(cube_num, currRed)
+            if "green" in reveal:
+                currGreen = max(cube_num, currGreen)
+            if "blue" in reveal:
+                currBlue = max(cube_num, currBlue)
+    total += (currRed * currBlue * currGreen)
+
+print(total)
