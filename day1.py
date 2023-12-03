@@ -999,6 +999,28 @@ four3threeonehbfhttgn39sqpctngqmzkhttn
 rphtbkncs4nznsix
 6three2sixsix9eightfour"""
 
+# PART 1
+
+input_split = input.split("\n")
+total = 0
+for i in input_split:
+    currNum = 0
+    for j in range(len(i)):
+        c = i[j]
+        if c.isdigit():
+            currNum = 10* (int)(c)
+            break
+    for j in range(len(i) - 1, -1, -1):
+        c = i[j]
+        if c.isdigit():
+            currNum += (int)(c)
+            break
+    total += currNum
+
+print(total)
+
+# PART 2
+
 input_split = input.split("\n")
 
 total = 0
@@ -1089,7 +1111,6 @@ for i in input_split:
         elif j == nine:
             currNum += 9
             break
-    print(currNum)
     total += currNum
 
 print(total)
