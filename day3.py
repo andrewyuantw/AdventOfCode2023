@@ -177,7 +177,6 @@ for i in range(len(input_split)):
                             isValid = True    
                 if isValid:
                     total += currNum
-                    print(currNum)
             currNum = 0
     if currNum != 0:
         # Check row above
@@ -196,6 +195,61 @@ for i in range(len(input_split)):
                     isValid = True    
         if isValid:
             total += currNum
-            print(currNum)
+
+print(total)
+
+# Part 2
+
+input_split = input.split("\n")
+total = 0
+
+from collections import defaultdict
+
+gearMap = defaultdict(list)
+
+for i in range(len(input_split)):
+    inp = input_split[i]
+    currNum = 0
+    for j in range(len(inp)):
+        if inp[j].isdigit():
+            currNum = currNum * 10 + int(inp[j])
+        else:
+            if currNum != 0:
+                print(currNum)
+                for x in range(j - 1 - len(str(currNum)),j + 1):
+                    if x >= 0 and x < len(inp) and i - 1 >= 0:
+                        if input_split[i - 1][x] == "*":
+                            hashString = str(i - 1) + ";" + str(x)
+                            gearMap[hashString].append(currNum)
+                for x in range(j - 1 - len(str(currNum)),j + 1):
+                    if x >= 0 and x < len(inp):
+                        if input_split[i][x] == "*":
+                            hashString = str(i ) + ";" + str(x)
+                            gearMap[hashString].append(currNum)   
+                for x in range(j - 1 - len(str(currNum)),j + 1):
+                    if x >= 0 and x < len(inp) and i + 1 < len(input_split):
+                        if input_split[i + 1][x] == "*":
+                            hashString = str(i + 1) + ";" + str(x)
+                            gearMap[hashString].append(currNum)
+            currNum = 0
+    if currNum != 0:
+        for x in range(j - 1 - len(str(currNum)),j + 1):
+            if x >= 0 and x < len(inp) and i - 1 >= 0:
+                if input_split[i - 1][x] == "*":
+                    hashString = str(i - 1) + ";" + str(x)
+                    gearMap[hashString].append(currNum)
+        for x in range(j - 1 - len(str(currNum)),j + 1):
+            if x >= 0 and x < len(inp):
+                if input_split[i][x] == "*":
+                    hashString = str(i ) + ";" + str(x)
+                    gearMap[hashString].append(currNum)   
+        for x in range(j - 1 - len(str(currNum)),j + 1):
+            if x >= 0 and x < len(inp) and i + 1 < len(input_split):
+                if input_split[i + 1][x] == "*":
+                    hashString = str(i + 1) + ";" + str(x)
+                    gearMap[hashString].append(currNum)
+for key in gearMap:
+    if len(gearMap[key]) == 2:
+        total += gearMap[key][0] * gearMap[key][1]
 
 print(total)
