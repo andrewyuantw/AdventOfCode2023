@@ -216,3 +216,31 @@ for i in range(len(input_split)):
     
     total += currPoints
 print(total)
+
+# Part 2
+
+input_split = input.split("\n")
+card_counter = [1] * len(input_split)
+
+for i in range(len(input_split)):
+    inp = input_split[i]
+    split_nums = inp.split(":")[1].split("|")
+    my_nums = split_nums[0].split(" ")
+    winning_nums = split_nums[1].split(" ")
+    
+    my_nums = set(map(lambda x: int(x), filter(lambda x: x != '', my_nums)))
+    winning_nums = set(map(lambda x: int(x), filter(lambda x: x != '', winning_nums)))
+
+    currPoints = 0
+
+    for n in my_nums:
+        if n in winning_nums:
+            currPoints += 1
+
+    for j in range(currPoints):
+        card_counter[i + j + 1] += card_counter[i]
+    
+total = 0
+for i in card_counter:
+    total += i
+print(total)
