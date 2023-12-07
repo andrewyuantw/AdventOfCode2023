@@ -18,3 +18,24 @@ for i in range(len(input_time)):
     total *= count
 
 print(total)
+
+# Part 2
+
+input2_time = [71530]
+input2_distance = [940200]
+
+input_time = [62649190]
+input_distance = [553101014731074]
+
+total = 1
+for i in range(len(input_time)):
+    time = input_time[i]
+    count = 0
+    for holding_time in range(time + 1):
+        time_moving = time - holding_time
+        moved = time_moving * holding_time
+        if moved > input_distance[i]:
+            count += 1
+    total *= count
+
+print(total)
