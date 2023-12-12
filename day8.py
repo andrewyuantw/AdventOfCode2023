@@ -755,3 +755,55 @@ while curr != dest:
             break
 
 print(steps)
+
+# Part 2
+
+from itertools import cycle
+from math import lcm
+
+input2='''LR
+
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)'''
+
+instructionSet = input.split('\n')[0]
+
+leftMap = defaultdict(str)
+rightMap = defaultdict(str)
+
+startingPoints = []
+
+for line in input.split('\n')[2:]:
+    key, tup = line.split(' = ')
+    left = tup.split(',')[0][1:]
+    right = tup.split(', ')[1][:-1]
+    leftMap[key] = left
+    rightMap[key] = right
+    if key[-1] == 'A':
+        startingPoints.append(key)
+
+cycles = []
+for point in startingPoints:
+    steps = 0
+    foundCycle = False
+    while True:
+        for c in instructionSet:
+            if c == 'R':
+                point = rightMap[point]
+                steps += 1
+            else:
+                point = leftMap[point]
+                steps += 1
+            if point[2] == 'Z':
+                cycles.append(steps)
+                foundCycle = True
+                break
+        if foundCycle:
+            break
+print(lcm(*cycles))
