@@ -1104,3 +1104,147 @@ for i in FiveOfAKind:
 
 print(total)
     
+
+# Part 2
+
+HandToBidMap = defaultdict(int)
+
+FiveOfAKind = []
+FourOfAKind = []
+FullHouse = []
+ThreeOfAKind = []
+TwoPair = []
+OnePair = []
+HighCard = []
+
+# Parse through information and populate map and arrays
+for line in input.split('\n'):
+    hand, bid = line.split(' ')
+    bid = int(bid)
+    hand = hand.replace('2', 'B')
+    hand = hand.replace('3', 'C')
+    hand = hand.replace('4', 'D')
+    hand = hand.replace('5', 'E')
+    hand = hand.replace('6', 'F')
+    hand = hand.replace('7', 'G')
+    hand = hand.replace('8', 'H')
+    hand = hand.replace('9', 'I')
+    hand = hand.replace('J', '1')
+    hand = hand.replace('Q', 'X')
+    hand = hand.replace('K', 'Y')
+    hand = hand.replace('A', 'Z')
+
+    HandToBidMap[hand] = bid
+
+    freqCount = defaultdict(int)
+
+    for c in hand:
+        freqCount[c] += 1
+    
+    tripsCount = 0
+    pairCount = 0
+    addedAlr = False
+
+    jokerCount = freqCount['1']
+
+    keys = (list)(freqCount.keys())
+    keys.sort()
+
+    tripsCount = 0
+    pairCount = 0
+    addedAlr = False
+
+    if jokerCount == 0:
+        for key in keys[1:]:
+            if freqCount[key] == 5:
+                FiveOfAKind.append(hand)
+                addedAlr = True
+            if freqCount[key] == 4:
+                FourOfAKind.append(hand)
+                addedAlr = True
+            if freqCount[key] == 3:
+                tripsCount += 1
+            if freqCount[key] == 2:
+                pairCount += 1
+        
+        if tripsCount == 1 and pairCount == 1:
+            FullHouse.append(hand)
+        elif tripsCount == 1 and pairCount == 0:
+            ThreeOfAKind.append(hand)
+        elif pairCount == 2:
+            TwoPair.append(hand)
+        elif pairCount == 1:
+            OnePair.append(hand)
+        elif not addedAlr:
+            HighCard.append(hand)
+    elif jokerCount == 1:
+        for key in keys[1:]:
+            if freqCount[key] == 4:
+                FiveOfAKind.append(hand)
+                addedAlr = True
+            if freqCount[key] == 3:
+                FourOfAKind.append(hand)
+                addedAlr = True
+            if freqCount[key] == 2:
+                pairCount += 1
+        
+        if pairCount == 2:
+            FullHouse.append(hand)
+        elif pairCount == 1:
+            ThreeOfAKind.append(hand)
+        elif not addedAlr:
+            OnePair.append(hand)
+    elif jokerCount == 2:
+        for key in keys[1:]:
+            if freqCount[key] == 3:
+                FiveOfAKind.append(hand)
+                addedAlr = True
+            if freqCount[key] == 2:
+                FourOfAKind.append(hand)
+                addedAlr = True
+        if not addedAlr:
+            ThreeOfAKind.append(hand)
+    elif jokerCount == 3:
+        for key in keys[1:]:
+            if freqCount[key] == 2:
+                FiveOfAKind.append(hand)
+                addedAlr = True
+        if not addedAlr:
+            FourOfAKind.append(hand)
+    else:
+        FiveOfAKind.append(hand)
+
+
+FourOfAKind.sort()      
+FiveOfAKind.sort()
+FullHouse.sort()
+ThreeOfAKind.sort()
+TwoPair.sort()
+OnePair.sort()
+HighCard.sort()
+
+total = 0
+rank = 1
+for i in HighCard:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in OnePair:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in TwoPair:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in ThreeOfAKind:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in FullHouse:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in FourOfAKind:
+    total += HandToBidMap[i] * rank
+    rank += 1
+for i in FiveOfAKind:
+    total += HandToBidMap[i] * rank
+    rank += 1
+
+print(total)
