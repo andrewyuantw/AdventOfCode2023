@@ -274,7 +274,7 @@ humidity-to-location map:
 input_split = input.split("\n\n")
 
 seeds = input_split[0].split(":")[1].split(" ")[1:]
-seeds = map(lambda x: int(x), seeds)
+seeds = list(map(lambda x: int(x), seeds))
 
 vals = seeds
 
@@ -289,7 +289,7 @@ for i in range(1, len(input_split)):
         foundRange = False
         for j in range(1, len(curr)):
             line = curr[j]
-            nums = map(lambda x: int(x), line.split(" "))
+            nums = list(map(lambda x: int(x), line.split(" ")))
             if seed >= nums[1] and seed < nums[1] + nums[2]:
                 new_vals.append(seed - nums[1] + nums[0])
                 foundRange = True
@@ -299,3 +299,60 @@ for i in range(1, len(input_split)):
     vals = new_vals     
         
 print(min(new_vals))
+
+# Part 2
+
+input_split = input.split("\n\n")
+
+seeds = input_split[0].split(":")[1].split(" ")[1:]
+seeds = list(map(lambda x: int(x), seeds))
+
+# Parse seeds into the new interval format
+vals = []
+for i in range(0, len(seeds), 2):
+    interval = [seeds[i], seeds[i] + seeds[i + 1]]
+    vals.append(interval)
+
+# Takes start, end, and map and returns a list of new intervals it should map to
+def intervalMappingHelper(start, end, curr_map):
+    new_intervals = []
+    for j in range(1, len(curr_map)):
+        line = curr_map[j]
+        nums = list(map(lambda x: int(x), line.split(" ")))
+        dest_start, src_start, interval_len = nums
+
+        # Check if the ranges overlap
+        overlap_start = max(start, src_start)
+        overlap_end = min(end, src_start + interval_len)
+
+        # If overlaps
+        if overlap_start < overlap_end:
+            # Add just the overlapping portion
+            new_intervals.append([dest_start + (overlap_start - src_start), dest_start + (overlap_end - src_start)])
+
+            # Break up existing interval into smaller intervals and mark as to be explored
+            if start < overlap_start:
+                vals.append((start, overlap_start))
+
+            if overlap_end < end:
+                vals.append((overlap_end, end))
+
+            break
+    else:
+        # If no overlap, just add the original range to the new seeds
+        new_intervals.append((start, end))
+    return new_intervals
+
+# for each map
+for i in range(1, len(input_split)):
+    curr_map = input_split[i].split('\n')
+    new_intervals = []
+    
+    # Helper function may break existing intervals into further intervals to "explore"
+    while len(vals) > 0:
+        start, end = vals.pop()
+        new_intervals += intervalMappingHelper(start, end, curr_map)
+
+    vals = new_intervals    
+        
+print(min(vals))
